@@ -30,16 +30,16 @@ namespace GithubRepoApi.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegistrationRequestDto model)
+        public async Task<ResponseDto> Register([FromBody] RegistrationRequestDto model)
         {
             var errorMessage = await _authService.Register(model);
             if (!string.IsNullOrEmpty(errorMessage))
             {
                 _response.IsSuccess = false;
                 _response.Message = errorMessage;
-                return BadRequest(_response);
+                return _response;
             }
-            return Ok(_response);
+            return _response;
         }
 
         /// <summary>
@@ -49,19 +49,19 @@ namespace GithubRepoApi.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDto model)
+        public async Task<ResponseDto> Login([FromBody] LoginRequestDto model)
         {
             var loginResponse = await _authService.Login(model);
-
+        
             if (loginResponse.User == null)
             {
                 _response.IsSuccess = false;
                 _response.Message = "Username or password incorrect";
-                return BadRequest(_response);
+                return _response;
             }
-
+        
             _response.Result = loginResponse;
-            return Ok(_response);
+            return _response;
         }
     }
 }
